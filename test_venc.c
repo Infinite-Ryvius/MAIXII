@@ -364,7 +364,7 @@ sint32 test_venc_GetFrame()
     if(count % 30 == 0)
     {
         FILE *fd;
-        char filename[128] = "./test_vi.jpg";
+        char filename[128] = "./test_venc.jpg";
         fd = fopen(filename, "wb");
         fwrite(stStream.mpPack->mpAddr0, 1, stStream.mpPack->mLen0, fd);
         fclose(fd);
