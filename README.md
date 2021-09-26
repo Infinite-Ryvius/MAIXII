@@ -6,4 +6,4 @@
 #### 3.测试
 - 交叉编译后需要将lib库下的动态库上传到/usr/lib/下
 - 还需将awlib的动态库文件夹上传到/usr/下，并为awlib添加相应的环境变量
-- 为awlib添加环境变量，可在/etc/profile文件下添加 export LD_LIBRARY_PATH=/usr/awlib:${LD_LIBRARY_PATH}
+- 为awlib添加环境变量，可在/etc/profile文件下添加 `export LD_LIBRARY_PATH=/usr/awlib:${LD_LIBRARY_PATH}`
