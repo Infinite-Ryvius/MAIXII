@@ -1,6 +1,6 @@
 # Makefile for eyesee-mpp/middleware/media/LIBRARY/AudioLib/lib
 CUR_PATH := .
-PACKAGE_TOP := ../../..
+PACKAGE_TOP := ../../../..
 EYESEE_MPP_INCLUDE:=$(STAGING_DIR)/usr/include/eyesee-mpp
 EYESEE_MPP_LIBDIR:=$(STAGING_DIR)/usr/lib/eyesee-mpp
 # STAGING_DIR is exported in rules.mk, so it can be used directly here.

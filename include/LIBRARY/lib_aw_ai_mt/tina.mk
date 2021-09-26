@@ -1,4 +1,4 @@
-# Makefile for eyesee-mpp/middleware/media/LIBRARY/AudioLib/lib
+# Makefile for eyesee-mpp/middleware/media/LIBRARY/lib_aw_ai_mt
 CUR_PATH := .
 PACKAGE_TOP := ../../..
 EYESEE_MPP_INCLUDE:=$(STAGING_DIR)/usr/include/eyesee-mpp
@@ -15,13 +15,19 @@ SRCCS :=
 INCLUDE_DIRS :=
 
 LOCAL_SHARED_LIBS :=
-
 LOCAL_STATIC_LIBS :=
-
+LOCAL_PREBUILD_LIBS :=
+ifeq ($(MPPCFG_COMPILE_DYNAMIC_LIB), Y)
+LOCAL_PREBUILD_LIBS += $(wildcard $(CUR_PATH)/lib/*.so)
+endif
+ifeq ($(MPPCFG_COMPILE_STATIC_LIB), Y)
+LOCAL_PREBUILD_LIBS += $(wildcard $(CUR_PATH)/lib/*.a)
+endif
 #set dst file name: shared library, static library, execute bin.
-LOCAL_TARGET_DYNAMIC := $(basename $(notdir $(wildcard $(CUR_PATH)/*.so)))
-LOCAL_TARGET_STATIC := $(basename $(notdir $(wildcard $(CUR_PATH)/*.a)))
+LOCAL_TARGET_DYNAMIC :=
+LOCAL_TARGET_STATIC :=
 LOCAL_TARGET_BIN :=
+LOCAL_TARGET_PREBUILD_LIBS := $(notdir $(LOCAL_PREBUILD_LIBS))
 
 #generate include directory flags for gcc.
 inc_paths := $(foreach inc,$(filter-out -I%,$(INCLUDE_DIRS)),$(addprefix -I, $(inc))) \
@@ -48,17 +54,16 @@ LOCAL_DYNAMIC_LDFLAGS := $(LOCAL_LDFLAGS) -shared \
 OBJS := $(SRCCS:%=%.o) #OBJS=$(patsubst %,%.o,$(SRCCS))
 
 #add dynamic lib name suffix and static lib name suffix.
-target_dynamic := $(patsubst %,out/%.so,$(patsubst %.so,%,$(LOCAL_TARGET_DYNAMIC)))
-target_static := $(patsubst %,out/%.a,$(patsubst %.a,%,$(LOCAL_TARGET_STATIC)))
+target_prebuild_libs := $(patsubst %,out/%,$(LOCAL_TARGET_PREBUILD_LIBS))
 
 #generate exe file.
 .PHONY: all
-all: $(target_dynamic) $(target_static)
+all: $(target_prebuild_libs)
 	@echo ===================================
-	@echo build eyesee-mpp-middleware-media-LIBRARY-AudioLib-lib done
+	@echo build eyesee-mpp-middleware-media-LIBRARY-lib_aw_ai_mt done
 	@echo ===================================
 
-$(target_dynamic) $(target_static): out/%: %
+$(target_prebuild_libs): out/%: lib/%
 	mkdir -p out
 	cp -f $< $@
 	@echo ----------------------------
@@ -69,19 +74,15 @@ $(target_dynamic) $(target_static): out/%: %
 
 #patten rules to generate local object files
 %.cpp.o: %.cpp
-	$(CXX) $(LOCAL_CXXFLAGS) $(LOCAL_CPPFLAGS) -MD -MP -MF $(@:%=%.d) -c -o $@ $<
+	$(CXX) $(LOCAL_CXXFLAGS) $(LOCAL_CPPFLAGS) -c -o $@ $<
 %.cc.o: %.cc
-	$(CXX) $(LOCAL_CXXFLAGS) $(LOCAL_CPPFLAGS) -MD -MP -MF $(@:%=%.d) -c -o $@ $<
+	$(CXX) $(LOCAL_CXXFLAGS) $(LOCAL_CPPFLAGS) -c -o $@ $<
 
 %.c.o: %.c
-	$(CC) $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) -MD -MP -MF $(@:%=%.d) -c -o $@ $<
+	$(CC) $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) -c -o $@ $<
 
 # clean all
 .PHONY: clean
 clean:
-	-rm -f $(OBJS) $(OBJS:%=%.d) $(target_dynamic) $(target_static)
+	-rm -f $(OBJS) $(target_prebuild_libs)
 	-rm -rf $(CUR_PATH)/out
-
-#add *.h prerequisites
--include $(OBJS:%=%.d)
-

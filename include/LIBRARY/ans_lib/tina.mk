@@ -18,10 +18,20 @@ LOCAL_SHARED_LIBS :=
 
 LOCAL_STATIC_LIBS :=
 
+ANS_LIB_CFG_CHK = $(findstring $(1),$(MPPCFG_ANS_LIB))
+
+$(eval $(if $(call ANS_LIB_CFG_CHK,libwebrtc),\
+     ANS_LIB_SUB_DIR := libwebrtc,\
+	 $(if $(call ANS_LIB_CFG_CHK,liblstm),\
+	       ANS_LIB_SUB_DIR := liblstm,\
+		   ANS_LIB_SUB_DIR :=)))
+
+
 #set dst file name: shared library, static library, execute bin.
-LOCAL_TARGET_DYNAMIC := $(basename $(notdir $(wildcard $(CUR_PATH)/*.so)))
-LOCAL_TARGET_STATIC := $(basename $(notdir $(wildcard $(CUR_PATH)/*.a)))
+LOCAL_TARGET_DYNAMIC := $(basename $(notdir $(wildcard $(CUR_PATH)/$(ANS_LIB_SUB_DIR)/*.so)))
+LOCAL_TARGET_STATIC := $(basename $(notdir $(wildcard $(CUR_PATH)/$(ANS_LIB_SUB_DIR)/*.a)))
 LOCAL_TARGET_BIN :=
+
 
 #generate include directory flags for gcc.
 inc_paths := $(foreach inc,$(filter-out -I%,$(INCLUDE_DIRS)),$(addprefix -I, $(inc))) \
@@ -51,22 +61,24 @@ OBJS := $(SRCCS:%=%.o) #OBJS=$(patsubst %,%.o,$(SRCCS))
 target_dynamic := $(patsubst %,out/%.so,$(patsubst %.so,%,$(LOCAL_TARGET_DYNAMIC)))
 target_static := $(patsubst %,out/%.a,$(patsubst %.a,%,$(LOCAL_TARGET_STATIC)))
 
+LOCAL_DIRS := include out
 #generate exe file.
 .PHONY: all
 all: $(target_dynamic) $(target_static)
 	@echo ===================================
 	@echo build eyesee-mpp-middleware-media-LIBRARY-AudioLib-lib done
 	@echo ===================================
-
-$(target_dynamic) $(target_static): out/%: %
-	mkdir -p out
+$(target_dynamic) $(target_static): out/%: $(ANS_LIB_SUB_DIR)/% | $(LOCAL_DIRS)
+	cp -f $(ANS_LIB_SUB_DIR)/ans_lib.h include/
 	cp -f $< $@
 	@echo ----------------------------
 	@echo "finish target: $@"
 #	@echo "object files:  $+"
 #	@echo "source files:  $(SRCCS)"
 	@echo ----------------------------
-
+$(LOCAL_DIRS):
+	@echo 'prepare dirs:$@'
+	mkdir -p $@
 #patten rules to generate local object files
 %.cpp.o: %.cpp
 	$(CXX) $(LOCAL_CXXFLAGS) $(LOCAL_CPPFLAGS) -MD -MP -MF $(@:%=%.d) -c -o $@ $<
@@ -81,6 +93,7 @@ $(target_dynamic) $(target_static): out/%: %
 clean:
 	-rm -f $(OBJS) $(OBJS:%=%.d) $(target_dynamic) $(target_static)
 	-rm -rf $(CUR_PATH)/out
+	-rm -rf $(CUR_PATH)/include
 
 #add *.h prerequisites
 -include $(OBJS:%=%.d)
