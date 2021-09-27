@@ -14,11 +14,11 @@ CFLAGS += -I ./include/ \
 		  -I ./include/media/component 
 
 SLIB = -L./lib/ -lz -lISP -lcdc_base -lion -lglog -llog -lVE -lisp_ini \
-				-lmedia_utils -lMemAdapter -lmpp_isp -lmpp_vi \
-			    -lcdx_base -lvideoengine -lcdx_stream \
-				-lcdx_parser -lvdecoder -lvenc_codec -lvenc_base -lmpp_vo -lmedia_mpp \
-				-lcedarxrender -lcedarxstream -lcdx_common -ladecoder -lhwdisplay \
-				-lcutils -lcedarx_aencoder -lasound -lmpp_component -lvencoder 
+		-lmedia_utils -lMemAdapter -lmpp_isp -lmpp_vi \
+		-lcdx_base -lvideoengine -lcdx_stream \
+		-lcdx_parser -lvdecoder -lvenc_codec -lvenc_base -lmpp_vo -lmedia_mpp \
+		-lcedarxrender -lcedarxstream -lcdx_common -ladecoder -lhwdisplay \
+		-lcutils -lcedarx_aencoder -lasound -lmpp_component -lvencoder 
 
 #CFLAGS += -Wall -O -g -o
 
