@@ -36,9 +36,9 @@ typedef enum _COM_LEVEL_{
 #define COM_COLOR_WHITE       "\033[1;37m"
 #define COM_COLOR_END         "\033[0m"
 
-#define print(level, fmt, arg...) do { \
+#define print(_class, fmt, arg...) do { \
     char *pColor; \
-    switch(level) \
+    switch(_class) \
     { \
         case COM_INFO: \
             pColor = COM_COLOR_GREEN; \
