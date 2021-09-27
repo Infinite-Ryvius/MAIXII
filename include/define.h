@@ -26,7 +26,7 @@ typedef enum _COM_LEVEL_{
     COM_DEBUG,
     COM_WARNNING,
     COM_ERROR,
-} COM_LEVEL;
+} COM_CLASS;
 
 /* 定义打印颜色值 */
 #define COM_COLOR_GREEN       "\033[1;32m"
