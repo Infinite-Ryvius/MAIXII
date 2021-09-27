@@ -21,7 +21,7 @@ typedef signed char	    sint8;
 #define COM_TRUE    1
 #define COM_FALSE   0
 
-typedef enum _COM_LEVEL_{
+typedef enum _COM_CLASS_{
     COM_INFO = 0,
     COM_DEBUG,
     COM_WARNNING,
