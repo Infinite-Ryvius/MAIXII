@@ -5,6 +5,8 @@
 #### 2.编译
 编译该工程需要安装交叉编译链，详见 https://github.com/sipeed/libmaix   
 直接在源路径使用 `Make` 即可编译
+##### 2.1 编译tool工具
+在tool/* 下可以直接用 `make` 编译相关的静态库，并需要把静态库放到./lib/static/ 下
 #### 3.测试
 - 交叉编译后需要将lib库下的动态库上传到/usr/lib/下
 - 还需将awlib的动态库文件夹上传到/usr/下，并为awlib添加相应的环境变量

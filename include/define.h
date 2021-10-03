@@ -21,12 +21,12 @@ typedef signed char	    sint8;
 #define COM_TRUE    1
 #define COM_FALSE   0
 
-typedef enum _COM_CLASS_{
+typedef enum _COM_LEVEL_{
     COM_INFO = 0,
     COM_DEBUG,
     COM_WARNNING,
     COM_ERROR,
-} COM_CLASS;
+} COM_LEVEL;
 
 /* 定义打印颜色值 */
 #define COM_COLOR_GREEN       "\033[1;32m"
@@ -36,9 +36,9 @@ typedef enum _COM_CLASS_{
 #define COM_COLOR_WHITE       "\033[1;37m"
 #define COM_COLOR_END         "\033[0m"
 
-#define print(_class, fmt, arg...) do { \
+#define print(level, fmt, arg...) do { \
     char *pColor; \
-    switch(_class) \
+    switch(level) \
     { \
         case COM_INFO: \
             pColor = COM_COLOR_GREEN; \
